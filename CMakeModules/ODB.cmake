@@ -157,7 +157,7 @@ function(odb_compile)
 
 	foreach(header ${PARAM_HEADERS})
 		get_filename_component(output_base ${header} NAME_WE)
-		set(output_base "${output_base}${odb_file_suffix}")
+		set(output_base "${odb_output_directory}/${output_base}${odb_file_suffix}")
 		set(odb_source "${output_base}${odb_source_suffix}")
 		set(odb_inline "${output_base}${odb_inline_suffix}")
 		set(odb_header "${output_base}${odb_header_suffix}")
@@ -169,17 +169,19 @@ function(odb_compile)
 			add_custom_command(
 				OUTPUT ${odb_source} ${odb_inline} ${odb_header}
 				COMMAND ${ODB_EXECUTABLE} ${ODB_ARGS} ${header}
+				WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 				DEPENDS ${header}
 				IMPLICIT_DEPENDS CXX ${header}
-				COMMENT "Generating ODB files for ${header}: ${odb_source} ${odb_inline} ${odb_header}"
+				COMMENT "Generating ODB files for ${header}"
 			)
 		else()
 			# Without IMPLICIT_DEPENDS - a change in an ODB header causes a complete regeneration
 			add_custom_command(
 				OUTPUT ${odb_source} ${odb_inline} ${odb_header}
 				COMMAND ${ODB_EXECUTABLE} ${ODB_ARGS} ${header}
+				WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 				DEPENDS ${PARAM_HEADERS}
-				COMMENT "Generating ODB files for ${header}: ${odb_source} ${odb_inline} ${odb_header}"
+				COMMENT "Generating ODB files for ${header}"
 			)
 		endif()
 	endforeach()

@@ -11,6 +11,7 @@ class Person : public Customer
 public:
 	Person( const std::string & name ) : Customer( name ) {}
 	Person( const std::string & name, const unsigned short & age ) : Customer( name ), age(age) {}
+
 	const unsigned short & getAge() { return this->age; }
 	void setAge( const unsigned short & age ) { this->age = age; }
 

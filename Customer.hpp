@@ -9,6 +9,7 @@ class Customer
 {
 public:
 	Customer( const std::string & name ) : name(name) {}
+
 	const std::string & getEmail() { return this->email; }
 	void setEmail( const std::string & email ) { this->email = email; }
 
