@@ -1,32 +1,13 @@
 cmake_minimum_required( VERSION 2.8 )
 project( odbcrs )
-
+enable_testing()
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMakeModules/" )
-
 include( ODB )
 
-
 set( odbcrs_headers
-	Person.hpp
-	Customer.hpp
-)
-
-set( odbcrs_sources
-	Person.cpp
-	Customer.cpp
-	main.cpp
-)
-
-set( odbcrs_include_dirs
-	.
-)
-
-set( odbcrs_library_dirs
-)
-
-set( odbcrs_libraries
-	odb
-	odb-sqlite
+	src/Person.hpp
+	src/Customer.hpp
+	src/Database.hpp
 )
 
 odb_compile(
@@ -38,6 +19,26 @@ odb_compile(
 	INLINE_SUFFIX ".ipp"
 	SOURCE_SUFFIX ".cpp"
 	FILE_SUFFIX ".odb"
+	OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/src
+)
+
+set( odbcrs_sources
+	src/Person.cpp
+	src/Customer.cpp
+	src/Database.cpp
+	${ODB_GENERATED_SOURCES}
+)
+
+set( odbcrs_include_dirs
+	src
+)
+
+set( odbcrs_library_dirs
+)
+
+set( odbcrs_libraries
+	odb
+	odb-sqlite
 )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -std=c++11 -Wno-unknown-pragmas" )
@@ -53,5 +54,11 @@ else( DOXYGEN_FOUND )
 	message( "Doxygen not found - Documentation can't be generated." )
 endif( DOXYGEN_FOUND )
 
-add_executable( odbcrs ${odbcrs_sources} ${ODB_GENERATED_SOURCES} )
+
+add_executable( odbcrs src/main.cpp ${odbcrs_sources} )
 target_link_libraries( odbcrs ${odbcrs_libraries} )
+
+
+add_executable( PersonTest test/PersonTest.cpp ${odbcrs_sources} )
+target_link_libraries( PersonTest ${odbcrs_libraries} )
+add_test( PersonTest PersonTest )

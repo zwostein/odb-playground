@@ -17,6 +17,7 @@ public:
 
 private:
 	friend class odb::access;
+	Person() {}
 
 	unsigned short age = 0;
 };

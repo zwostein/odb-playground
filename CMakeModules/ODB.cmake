@@ -85,7 +85,7 @@ function(odb_compile)
 
 	if(PARAM_STANDARD)
 		list(APPEND ODB_ARGS --std ${PARAM_STANDARD})
- 	endif()
+	endif()
 
 	if(PARAM_OUTPUT_DIRECTORY)
 		set(odb_output_directory ${PARAM_OUTPUT_DIRECTORY})
@@ -156,36 +156,42 @@ function(odb_compile)
 	endif()
 
 	foreach(header ${PARAM_HEADERS})
-		get_filename_component(output_base ${header} NAME_WE)
-		set(output_base "${odb_output_directory}/${output_base}${odb_file_suffix}")
-		set(odb_source "${output_base}${odb_source_suffix}")
-		set(odb_inline "${output_base}${odb_inline_suffix}")
-		set(odb_header "${output_base}${odb_header_suffix}")
-		list(APPEND ODB_GENERATED_SOURCES ${odb_source})
-		list(APPEND ODB_GENERATED_INLINES ${odb_inline})
-		list(APPEND ODB_GENERATED_HEADERS ${odb_header})
-		if(use_implicit_depends)
-			# use IMPLICIT_DEPENDS to check further dependencies among ODB headers
-			add_custom_command(
-				OUTPUT ${odb_source} ${odb_inline} ${odb_header}
-				COMMAND ${ODB_EXECUTABLE} ${ODB_ARGS} ${header}
-				WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-				DEPENDS ${header}
-				IMPLICIT_DEPENDS CXX ${header}
-				COMMENT "Generating ODB files for ${header}"
-			)
-		else()
-			# Without IMPLICIT_DEPENDS - a change in an ODB header causes a complete regeneration
-			add_custom_command(
-				OUTPUT ${odb_source} ${odb_inline} ${odb_header}
-				COMMAND ${ODB_EXECUTABLE} ${ODB_ARGS} ${header}
-				WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-				DEPENDS ${PARAM_HEADERS}
-				COMMENT "Generating ODB files for ${header}"
-			)
+		file( READ ${header} headercontent )
+		# Don't generate ODB sources for headers without ODB pragmas
+		if( "${headercontent}" MATCHES "#pragma[ \t]+db" )
+			get_filename_component(output_base ${header} NAME_WE)
+			set(output_base "${odb_output_directory}/${output_base}${odb_file_suffix}")
+			set(odb_source "${output_base}${odb_source_suffix}")
+			set(odb_inline "${output_base}${odb_inline_suffix}")
+			set(odb_header "${output_base}${odb_header_suffix}")
+			list(APPEND ODB_GENERATED_SOURCES ${odb_source})
+			list(APPEND ODB_GENERATED_INLINES ${odb_inline})
+			list(APPEND ODB_GENERATED_HEADERS ${odb_header})
+			if(use_implicit_depends)
+				# Use IMPLICIT_DEPENDS to check further dependencies among headers
+				# IMPLICIT_DEPENDS seems to rely on absolute paths
+				get_filename_component(absolute_header ${header} ABSOLUTE)
+				add_custom_command(
+					OUTPUT ${odb_source} ${odb_inline} ${odb_header}
+					COMMAND ${ODB_EXECUTABLE} ${ODB_ARGS} ${header}
+					WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+					DEPENDS ${header}
+					IMPLICIT_DEPENDS CXX ${absolute_header}
+					COMMENT "Generating ODB files for ${header}"
+				)
+			else()
+				# Without IMPLICIT_DEPENDS - a change in a header causes a complete regeneration
+				add_custom_command(
+					OUTPUT ${odb_source} ${odb_inline} ${odb_header}
+					COMMAND ${ODB_EXECUTABLE} ${ODB_ARGS} ${header}
+					WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+					DEPENDS ${PARAM_HEADERS}
+					COMMENT "Generating ODB files for ${header}"
+				)
+			endif()
 		endif()
 	endforeach()
-	
+
 	# Make these variables visible to the user
 	set(ODB_GENERATED_SOURCES "${ODB_GENERATED_SOURCES}" PARENT_SCOPE)
 	set(ODB_GENERATED_INLINES "${ODB_GENERATED_INLINES}" PARENT_SCOPE)

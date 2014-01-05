@@ -13,6 +13,9 @@ public:
 	const std::string & getEmail() { return this->email; }
 	void setEmail( const std::string & email ) { this->email = email; }
 
+protected:
+	Customer() {}
+
 private:
 	friend class odb::access;
 
