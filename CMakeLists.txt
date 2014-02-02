@@ -4,12 +4,15 @@ enable_testing()
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMakeModules/" )
 include( ODB )
 
+# List headers with persistent classes
 set( odbcrs_headers
 	src/Person.hpp
 	src/Customer.hpp
 	src/Database.hpp
+	src/DateOfBirth.hpp
 )
 
+# Run ODB compiler for all headers
 odb_compile(
 	HEADERS ${odbcrs_headers}
 	DB sqlite
@@ -19,21 +22,15 @@ odb_compile(
 	INLINE_SUFFIX ".ipp"
 	SOURCE_SUFFIX ".cpp"
 	FILE_SUFFIX ".odb"
-	OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/src
 )
 
+# List all CRS source files
 set( odbcrs_sources
 	src/Person.cpp
 	src/Customer.cpp
 	src/Database.cpp
+	src/DateOfBirth.cpp
 	${ODB_GENERATED_SOURCES}
-)
-
-set( odbcrs_include_dirs
-	src
-)
-
-set( odbcrs_library_dirs
 )
 
 set( odbcrs_libraries
@@ -43,8 +40,16 @@ set( odbcrs_libraries
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -std=c++11 -Wno-unknown-pragmas" )
 
-link_directories( ${odbcrs_library_dirs} )
-include_directories( ${odbcrs_include_dirs} )
+include_directories( src )
+
+# Main executable
+add_executable( odbcrs src/main.cpp ${odbcrs_sources} )
+target_link_libraries( odbcrs ${odbcrs_libraries} )
+
+# Unit tests
+add_executable( PersonTest test/PersonTest.cpp ${odbcrs_sources} )
+target_link_libraries( PersonTest ${odbcrs_libraries} )
+add_test( PersonTest PersonTest )
 
 find_package( Doxygen )
 if( DOXYGEN_FOUND )
@@ -53,12 +58,3 @@ if( DOXYGEN_FOUND )
 else( DOXYGEN_FOUND )
 	message( "Doxygen not found - Documentation can't be generated." )
 endif( DOXYGEN_FOUND )
-
-
-add_executable( odbcrs src/main.cpp ${odbcrs_sources} )
-target_link_libraries( odbcrs ${odbcrs_libraries} )
-
-
-add_executable( PersonTest test/PersonTest.cpp ${odbcrs_sources} )
-target_link_libraries( PersonTest ${odbcrs_libraries} )
-add_test( PersonTest PersonTest )

@@ -45,7 +45,7 @@ function(odb_compile)
 	endif()
 
 	# We need some defaults for this to work in a nice way.
-	set(odb_output_directory ${CMAKE_CURRENT_SOURCE_DIR})
+	set(odb_output_directory "${CMAKE_CURRENT_BINARY_DIR}/odb")
 	set(odb_header_suffix ".hxx")
 	set(odb_inline_suffix ".ixx")
 	set(odb_source_suffix ".cxx")
@@ -145,6 +145,7 @@ function(odb_compile)
 	endforeach()
 
 	file(MAKE_DIRECTORY "${odb_output_directory}")
+	include_directories("${odb_output_directory}")
 
 	# Enable IMPLICIT_DEPENDS for all generators that do not ignore it
 	if(${CMAKE_GENERATOR} MATCHES "^.*Makefiles.*")

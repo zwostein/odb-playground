@@ -2,8 +2,9 @@
 #include <memory>
 #include <cassert>
 #include <odb/transaction.hxx>
-#include "Person.hpp"
+
 #include "Person.odb.hpp"
+#include "Person.hpp"
 #include "Database.hpp"
 
 
@@ -15,9 +16,9 @@ int main()
 
 		std::string john_id, jane_id, joe_id;
 		{
-			Person john( "John", 33 );
-			Person jane( "Jane", 32 );
-			Person joe( "Joe" );
+			Person john( "John", DateOfBirth(1969,1,1) );
+			Person jane( "Jane", DateOfBirth(1969,2,4) );
+			Person joe( "Joe", DateOfBirth(1969,3,9) );
 
 			odb::transaction t( db->begin() );
 

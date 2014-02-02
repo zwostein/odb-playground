@@ -1,4 +1,5 @@
 #include "Database.hpp"
+
 #include <odb/schema-catalog.hxx>
 #include <iostream>
 

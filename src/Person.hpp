@@ -1,25 +1,30 @@
 #ifndef _PERSON_INCLUDED_
 #define _PERSON_INCLUDED_
 
+#include "Customer.hpp"
+#include "DateOfBirth.hpp"
+
 #include <string>
 #include <odb/core.hxx>
-#include "Customer.hpp"
+
 
 #pragma db object
 class Person : public Customer
 {
 public:
-	Person( const std::string & name ) : Customer( name ) {}
-	Person( const std::string & name, const unsigned short & age ) : Customer( name ), age(age) {}
+	Person( const std::string & name, const DateOfBirth & dateOfBirth ) : Customer( name ), dateOfBirth( dateOfBirth ) {}
 
-	const unsigned short & getAge() { return this->age; }
-	void setAge( const unsigned short & age ) { this->age = age; }
+	DateOfBirth getDateOfBirth() const { return dateOfBirth; }
+	void setDateOfBirth( const DateOfBirth & dateOfBirth ) { this->dateOfBirth = dateOfBirth; }
+
+	int getAge() { return this->dateOfBirth.getAge(); }
 
 private:
 	friend class odb::access;
-	Person() {}
+	Person() : Customer(), dateOfBirth(DateOfBirth::now()) {}
 
-	unsigned short age = 0;
+	DateOfBirth dateOfBirth;
 };
+
 
 #endif
