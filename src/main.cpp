@@ -15,9 +15,9 @@ int main()
 
 		std::string john_id, jane_id, joe_id;
 		{
-			Person john( "John", DateOfBirth(1969,1,1) );
-			Person jane( "Jane", DateOfBirth(1969,2,4) );
-			Person joe( "Joe", DateOfBirth(1969,3,9) );
+			Person john( "John", Date(1969,1,1) );
+			Person jane( "Jane", Date(1969,2,4) );
+			Person joe( "Joe", Date(1969,3,9) );
 
 			odb::transaction t( db->begin() );
 

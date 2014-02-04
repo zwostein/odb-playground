@@ -5,10 +5,13 @@
 #include <odb/core.hxx>
 
 #pragma db value
-class DateOfBirth
+class Date
 {
 public:
-	DateOfBirth( const int & year, const int & month, const int & day ) : year(year), month(month), day(day) {}
+	static Date now();
+
+	Date( const int & day, const int & month, const int & year ) : year(year), month(month), day(day) {}
+	Date() { *this = Date::now(); }
 
 	const int & getYear() const { return this->year; }
 	const int & getMonth() const { return this->month; }
@@ -19,11 +22,10 @@ public:
 
 	int getAge() const;
 
-	static DateOfBirth now();
+	inline bool operator==( const Date & other ) const { return this->day == other.day && this->month == other.month && this->year == other.year;}
 
 private:
 	friend class odb::access;
-	DateOfBirth() {}
 
 	int year;
 	int month;

@@ -2,7 +2,7 @@
 #define _PERSON_INCLUDED_
 
 #include "Customer.hpp"
-#include "DateOfBirth.hpp"
+#include "Date.hpp"
 
 #include <string>
 #include <odb/core.hxx>
@@ -12,18 +12,18 @@
 class Person : public Customer
 {
 public:
-	Person( const std::string & name, const DateOfBirth & dateOfBirth ) : Customer( name ), dateOfBirth( dateOfBirth ) {}
+	Person( const std::string & name, const Date & dateOfBirth ) : Customer( name ), dateOfBirth( dateOfBirth ) {}
 
-	DateOfBirth getDateOfBirth() const { return dateOfBirth; }
-	void setDateOfBirth( const DateOfBirth & dateOfBirth ) { this->dateOfBirth = dateOfBirth; }
+	Date getDateOfBirth() const { return dateOfBirth; }
+	int getAge() const { return this->dateOfBirth.getAge(); }
 
-	int getAge() { return this->dateOfBirth.getAge(); }
+	void setDateOfBirth( const Date & dateOfBirth ) { this->dateOfBirth = dateOfBirth; }
 
 private:
 	friend class odb::access;
-	Person() : Customer(), dateOfBirth(DateOfBirth::now()) {}
+	Person() : Customer() {}
 
-	DateOfBirth dateOfBirth;
+	Date dateOfBirth;
 };
 
 

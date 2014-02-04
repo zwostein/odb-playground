@@ -9,7 +9,8 @@ set( odbcrs_headers
 	src/Person.hpp
 	src/Customer.hpp
 	src/Database.hpp
-	src/DateOfBirth.hpp
+	src/Date.hpp
+	src/LicenseClass.hpp
 )
 
 # Run ODB compiler for all headers
@@ -29,7 +30,7 @@ set( odbcrs_sources
 	src/Person.cpp
 	src/Customer.cpp
 	src/Database.cpp
-	src/DateOfBirth.cpp
+	src/Date.cpp
 	${ODB_GENERATED_SOURCES}
 )
 
@@ -47,9 +48,12 @@ add_executable( odbcrs src/main.cpp ${odbcrs_sources} )
 target_link_libraries( odbcrs ${odbcrs_libraries} )
 
 # Unit tests
-add_executable( PersonTest test/PersonTest.cpp ${odbcrs_sources} )
-target_link_libraries( PersonTest ${odbcrs_libraries} )
-add_test( PersonTest PersonTest )
+add_executable( test_addPersons test/addPersons.cpp ${odbcrs_sources} )
+add_executable( test_addLicenseClassesToPerson test/addLicenseClassesToPerson.cpp ${odbcrs_sources} )
+target_link_libraries( test_addPersons ${odbcrs_libraries} )
+target_link_libraries( test_addLicenseClassesToPerson ${odbcrs_libraries} )
+add_test( addPersons test_addPersons )
+add_test( addLicenseClassesToPerson test_addLicenseClassesToPerson )
 
 find_package( Doxygen )
 if( DOXYGEN_FOUND )
