@@ -12,23 +12,26 @@ int main()
 {
 	try
 	{
-		std::unique_ptr<odb::database> db( new Database( "PersonTest.addPersons.db", true ) );
+		std::unique_ptr<odb::database> db( new Database( "Person_StoreLoad.test.db", true ) );
 
+		// a set storing all persons we want to add
 		std::unordered_set<std::shared_ptr<Person>> persons;
 		persons.insert( std::shared_ptr<Person>( new Person( "John", Date(1,1,1969) ) ) );
 		persons.insert( std::shared_ptr<Person>( new Person( "Jane", Date(15,2,1969) ) ) );
 		persons.insert( std::shared_ptr<Person>( new Person( "Joe", Date::now() ) ) );
 
+		// store every person in database
 		{
 			odb::transaction t( db->begin() );
 			for( std::shared_ptr<Person> p : persons )
 			{
-				db->persist( *p );
+				db->persist( p );
 				std::cout << "Stored " << p->getName() << "\n";
 			}
 			t.commit();
 		}
 
+		// retrieve every person and compare to original set
 		{
 			odb::transaction t( db->begin() );
 			odb::query<Person> q;
@@ -55,6 +58,7 @@ int main()
 			}
 			t.commit();
 		}
+		// the set should be empty if every person could be retrieved
 		assert( persons.size() == 0 );
 	}
 	catch( const odb::exception & e )

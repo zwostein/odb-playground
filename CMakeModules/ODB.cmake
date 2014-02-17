@@ -30,7 +30,7 @@ function(odb_compile)
 		HEADER_SUFFIX INLINE_SUFFIX SOURCE_SUFFIX FILE_SUFFIX
 		HEADER_PROLOGUE INLINE_PROLOGUE SOURCE_PROLOGUE
 		HEADER_EPILOGUE INLINE_EPILOGUE SOURCE_EPILOGUE
-		PROFILE)
+		PROFILE DEFAULT_POINTER)
 	set(multiValueParams HEADERS INCLUDES)
 
 	cmake_parse_arguments(PARAM "${options}"
@@ -132,6 +132,10 @@ function(odb_compile)
 
 	if(PARAM_PROFILE)
 		list(APPEND ODB_ARGS --profile ${PARAM_PROFILE})
+	endif()
+
+	if(PARAM_DEFAULT_POINTER)
+		list(APPEND ODB_ARGS --default-pointer ${PARAM_DEFAULT_POINTER})
 	endif()
 
 	list(APPEND ODB_ARGS --output-dir ${odb_output_directory})

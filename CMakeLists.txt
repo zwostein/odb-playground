@@ -23,6 +23,7 @@ odb_compile(
 	INLINE_SUFFIX ".ipp"
 	SOURCE_SUFFIX ".cpp"
 	FILE_SUFFIX ".odb"
+	DEFAULT_POINTER "std::shared_ptr"
 )
 
 # List all CRS source files
@@ -48,12 +49,15 @@ add_executable( odbcrs src/main.cpp ${odbcrs_sources} )
 target_link_libraries( odbcrs ${odbcrs_libraries} )
 
 # Unit tests
-add_executable( test_addPersons test/addPersons.cpp ${odbcrs_sources} )
-add_executable( test_addLicenseClassesToPerson test/addLicenseClassesToPerson.cpp ${odbcrs_sources} )
-target_link_libraries( test_addPersons ${odbcrs_libraries} )
-target_link_libraries( test_addLicenseClassesToPerson ${odbcrs_libraries} )
-add_test( addPersons test_addPersons )
-add_test( addLicenseClassesToPerson test_addLicenseClassesToPerson )
+add_executable( test_Person_StoreLoad test/Person_StoreLoad.cpp ${odbcrs_sources} )
+add_executable( test_Person_addLicenseClass test/Person_addLicenseClass.cpp ${odbcrs_sources} )
+add_executable( test_Person_removeLicenseClass test/Person_removeLicenseClass.cpp ${odbcrs_sources} )
+target_link_libraries( test_Person_StoreLoad ${odbcrs_libraries} )
+target_link_libraries( test_Person_addLicenseClass ${odbcrs_libraries} )
+target_link_libraries( test_Person_removeLicenseClass ${odbcrs_libraries} )
+add_test( Person_StoreLoad test_Person_StoreLoad )
+add_test( Person_addLicenseClass test_Person_addLicenseClass )
+add_test( Person_removeLicenseClass test_Person_removeLicenseClass )
 
 find_package( Doxygen )
 if( DOXYGEN_FOUND )
