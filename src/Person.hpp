@@ -1,6 +1,7 @@
 #ifndef _PERSON_INCLUDED_
 #define _PERSON_INCLUDED_
 
+
 #include "Customer.hpp"
 #include "Date.hpp"
 
@@ -19,9 +20,11 @@ public:
 
 	void setDateOfBirth( const Date & dateOfBirth ) { this->dateOfBirth = dateOfBirth; }
 
+protected:
+	Person() : Customer() {}
+
 private:
 	friend class odb::access;
-	Person() : Customer() {}
 
 	Date dateOfBirth;
 };

@@ -1,12 +1,16 @@
 #ifndef _CUSTOMER_INCLUDED_
 #define _CUSTOMER_INCLUDED_
 
+
+#include "Date.hpp"
+#include "LicenseClass.hpp"
+
 #include <string>
 #include <unordered_set>
 #include <memory>
+
 #include <odb/core.hxx>
-#include "Date.hpp"
-#include "LicenseClass.hpp"
+
 
 #pragma db object
 class Customer

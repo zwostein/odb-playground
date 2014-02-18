@@ -2,11 +2,13 @@
 #include <memory>
 #include <cassert>
 #include <unordered_set>
+
 #include <odb/transaction.hxx>
 
 #include "Person.odb.hpp"
 #include "Person.hpp"
 #include "Database.hpp"
+
 
 int main()
 {
@@ -44,7 +46,7 @@ int main()
 		{
 			odb::transaction t( db->begin() );
 			std::shared_ptr<Person> john( db->load<Person>( john_id ) );
-			assert( john.use_count() != 0 ); // assert that the person could be loaded
+			assert( john ); // assert that the person could be loaded
 			// cycle through each license class and remove it from the original set
 			for( const std::shared_ptr<LicenseClass> & ld : john->getLicenseClasses() )
 			{

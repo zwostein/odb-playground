@@ -1,8 +1,10 @@
 #ifndef _DATEOFBIRTH_INCLUDED_
 #define _DATEOFBIRTH_INCLUDED_
 
+
 #include <string>
 #include <odb/core.hxx>
+
 
 #pragma db value
 class Date
