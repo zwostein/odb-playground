@@ -14,6 +14,7 @@ int main()
 {
 	try
 	{
+		odb::session s; // this keeps shared pointers consistent after reloading them from the db (turns on object cache)
 		std::unique_ptr<odb::database> db( new Database( "Person_addLicenseClass.test.db", true ) );
 
 		// a set storing all license classes we want to add
@@ -28,7 +29,7 @@ int main()
 			assert( p->addLicenseClass( l ) );
 
 		// for accessing the stored person by id
-		std::string john_id;
+		std::string person_id;
 
 		// store person and license classes
 		{
@@ -38,30 +39,30 @@ int main()
 				db->persist( l );
 				std::cout << "Stored " << l->getAbbreviation() << "\n";
 			}
-			john_id = db->persist( p );
+			person_id = db->persist( p );
 			t.commit();
 		}
 
 		// retrieve person and check if all license classes could be loaded
 		{
 			odb::transaction t( db->begin() );
-			std::shared_ptr<Person> john( db->load<Person>( john_id ) );
-			assert( john ); // assert that the person could be loaded
+			std::shared_ptr<Person> person( db->load<Person>( person_id ) );
+			assert( person ); // assert that the person could be loaded
 			// cycle through each license class and remove it from the original set
-			for( const std::shared_ptr<LicenseClass> & ld : john->getLicenseClasses() )
+			for( const std::shared_ptr<LicenseClass> & licenseClass : person->getLicenseClasses() )
 			{
 				bool storedIdentical = false;
-				for( const std::shared_ptr<LicenseClass> & ll : licenses )
+				for( const std::shared_ptr<LicenseClass> & l : licenses )
 				{
-					if( ll->getAbbreviation() == ld->getAbbreviation() && ll->getDescription() == ld->getDescription() )
+					if( l == licenseClass )
 					{
 						storedIdentical = true;
-						licenses.erase( ll );
+						licenses.erase( l );
 						break;
 					}
 				}
 				assert( storedIdentical );
-				std::cout << "Retrieved " << ld->getAbbreviation() << "\n";
+				std::cout << "Retrieved " << licenseClass->getAbbreviation() << "\n";
 			}
 			t.commit();
 		}

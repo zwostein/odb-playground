@@ -14,6 +14,7 @@ int main()
 {
 	try
 	{
+		odb::session s; // this keeps shared pointers consistent after reloading them from the db (turns on object cache)
 		std::unique_ptr<odb::database> db( new Database( "Person_StoreLoad.test.db", true ) );
 
 		// a set storing all persons we want to add

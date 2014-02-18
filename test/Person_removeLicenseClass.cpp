@@ -26,10 +26,10 @@ int main()
 		// we will add all licenses to one person
 		std::shared_ptr<Person> p( new Person( "John", Date(1,1,1969) ) );
 		for( const std::shared_ptr<LicenseClass> & l : licenses )
-			p->addLicenseClass( l );
+			assert( p->addLicenseClass( l ) );
 
 		// for accessing the stored person by id
-		std::string john_id;
+		std::string person_id;
 
 		// store person and license classes
 		{
@@ -39,7 +39,7 @@ int main()
 				db->persist( l );
 				std::cout << "Stored " << l << " - " << l->getAbbreviation() << "\n";
 			}
-			john_id = db->persist( p );
+			person_id = db->persist( p );
 			t.commit();
 		}
 
@@ -49,7 +49,7 @@ int main()
 			// retrieve the stored person and remove a license class
 			{
 				odb::transaction t( db->begin() );
-				std::shared_ptr<Person> john( db->load<Person>( john_id ) );
+				std::shared_ptr<Person> john( db->load<Person>( person_id ) );
 				for( const std::shared_ptr<LicenseClass> & l : john->getLicenseClasses() )
 				{
 					std::cout << "Still persistent: " << l << " - " << l->getAbbreviation() << "\n";
@@ -62,7 +62,7 @@ int main()
 			// reload person from database and check if license class got removed
 			{
 				odb::transaction t( db->begin() );
-				std::shared_ptr<Person> john( db->load<Person>( john_id ) );
+				std::shared_ptr<Person> john( db->load<Person>( person_id ) );
 				assert( john->getLicenseClasses().size() == licenses.size()-1 ); // should be removed in database too
 				t.commit();
 			}
