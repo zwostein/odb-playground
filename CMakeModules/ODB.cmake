@@ -12,6 +12,12 @@
 # See COPYING for license terms.
 #
 # ----------------------------------------------------------------------
+# Modified by zwostein <provisorisch@online.de>
+#    generated files are placed in CMAKE_CURRENT_BINARY_DIR
+#    added DEFAULT_POINTER option
+#    IMPLICIT_DEPENDS support
+#    running odb compiler for each header
+#    suffers from bug http://public.kitware.com/Bug/view.php?id=12311
 
 include(CMakeParseArguments)
 
