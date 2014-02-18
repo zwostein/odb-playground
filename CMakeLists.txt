@@ -7,6 +7,7 @@ include( ODB )
 
 # List headers with persistent classes
 set( odbcrs_headers
+	src/Company.hpp
 	src/Branch.hpp
 	src/Employee.hpp
 	src/Person.hpp
@@ -34,6 +35,7 @@ odb_compile(
 
 # List all CRS source files
 set( odbcrs_sources
+	src/Company.cpp
 	src/Branch.cpp
 	src/Employee.cpp
 	src/Person.cpp
@@ -72,6 +74,7 @@ function( add_crs_tests )
 endfunction()
 
 add_crs_tests(
+	test/Company_addRepresentative.cpp
 	test/Person_StoreLoad.cpp
 	test/Person_addLicenseClass.cpp
 	test/Person_removeLicenseClass.cpp
